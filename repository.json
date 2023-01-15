@@ -5,8 +5,8 @@
       "name": "Tunic Randomizer - Item & Map Tracker",
 	  "game_name": "Tunic",
       "author": "SapphireSapphic, Scout_JD",
-      "package_version": "1.1",
-      "package_uid": "tunic_sapphiresapphic",
+      "version": "1.1",
+      "uid": "tunic_sapphiresapphic",
       "link": "https://github.com/SapphireSapphic/TunicTracker/releases/download/tunic/tunic_sapphiresapphic.zip"
     }
   ]
