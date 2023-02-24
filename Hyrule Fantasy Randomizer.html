@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+	<head>
+		<title>Hyrule Fantasy Randomizer</title>
+		<link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
+		<style>
+			table{
+				margin:0px;
+				padding:0px;
+			}
+			.option{
+				display: inline-block;
+				border-right: 5px solid black;
+			}
+			td, th {
+				text-align:center;
+				font-family: 'Righteous', cursive;
+				font-size: 12px;
+				margin:0px;
+				padding:0px;
+				border:1px dotted gray;
+			}
+			.info {
+				text-align:center;
+				font-family: 'Righteous', cursive;
+				width:auto;
+			}
+			button {
+				text-align:center;
+				display: inline;
+				font-size: 12px;
+				font-family: 'Righteous', cursive;
+			}
+			.check{
+				margin:0px;
+				padding:0px;
+			}
+			label, p {
+				font-family: 'Righteous', cursive;
+				margin:2px;
+				padding:2px;
+			}
+			.top {
+				border-top: 3px solid black;
+			}
+			.left{
+				border-left: 3px solid black;
+			}
+			.right {
+				border-right: 3px solid black;
+			}
+			.bottom{
+				border-bottom: 3px solid black;
+			}
+			.lop {
+				border-top: 1px solid black;
+			}
+			.llft{
+				border-left: 1px solid black;
+			}
+			.light {
+				border-right: 1px solid black;
+			}
+			.lottom{
+				border-bottom: 1px solid black;
+			}
+			.fairy{
+				background-color: #00ffff;
+			}
+			.end{
+				background-color: #800000;
+				color: #ffffff;
+			}
+			.dungeon{
+				background-color: #000000;
+				color: #ffffff;
+			}
+			.bonus{
+				background-color: #e39f00;
+				color: #000000;
+			}
+			.bomb{
+				background-color: #022FD1;
+				color: #ffffff;
+			}
+			.warp{
+				background-color: orange;
+				color: #000000;
+			}
+		</style>
+	</head>
+	<body>
+		<form action="" method="GET" id="gameGen">
+			<label>Seed:</label>
+			<input type="text" name="seed">
+			<label>(Base 15 Checks)</label>
+			<br><br>
+			
+			<div class="option">
+				<label>Randomize Potions:</label><br>
+				<input type="radio" name="pot" value="y"><label>Yes</label>
+				<input type="radio" name="pot" value="n" checked><label>No</label><br>
+				<label>(Adds 5 Checks)</label>
+			</div>
+			<div class="option">
+				<label>Randomize Rupees:</label><br>
+				<input type="radio" name="rup" value="y"><label>Yes</label>
+				<input type="radio" name="rup" value="n" checked><label>No</label><br>
+				<label>(Adds 3 Checks)</label>
+			</div>
+			<div class="option">
+				<label>Randomize Events:</label><br>
+				<input type="radio" name="evn" value="y"><label>Yes</label>
+				<input type="radio" name="evn" value="n" checked><label>No</label><br>
+				<label>(Adds 8 Checks)</label>
+			</div>
+			<div class="option">
+				<label>Bonus Checks:</label><br>
+				<input type="radio" name="dx" value="y"><label>All</label>
+				<input type="radio" name="dx" value="b"><label>Bombs</label>
+				<input type="radio" name="dx" value="f"><label>Free</label>
+				<input type="radio" name="dx" value="n" checked><label>None</label><br>
+				<label>(Adds 48 / 23 / 25 Checks)</label>
+			</div>
+			<div class="option">
+				<label>Chaos Rando:</label><br>
+				<input type="radio" name="chaos" value="y"><label>Yes</label>
+				<input type="radio" name="chaos" value="n" checked><label>No</label><br>
+				<label>(Adds No Checks, but is spooky)</label>
+			</div>
+			<br><br>
+			<button type="submit" value="Submit" form="gameGen">Generate Game</button>
+		</form>
+		<hr>
+		<!-- 
+		Output
+		-->
+		<p id="seed">Seed: </p>
+		<br>
+		<table style="display:inline-block; float:left; border-collapse: collapse;">
+			<tr class="top">
+				<td rowspan=2 class="left">
+					A1
+				</td>
+				<td rowspan=2>
+					A2
+				</td>
+				<td rowspan=2 colspan=2>
+					A3
+				</td>
+				<td rowspan=2 colspan=2 class="right">
+					A4
+				</td>
+				<td colspan=2 id="track-A5-50-Cell" class="left">
+					<button id="A5-50" onclick="spoiler('A5-50')">50 R</button>
+					<input type="checkbox" class="check" id="track-A5-50" onclick="track('track-A5-50')">
+					<input type="hidden" value="Potion" id="A5-50S"><br>
+					<p id="A5-50R"></p>
+				</td>
+				<td rowspan=2 class="bottom dungeon">
+					Ganon
+				</td>
+				<td rowspan=2 colspan=2 class="bottom">
+					A7
+				</td>
+				<td rowspan=2>
+					A8
+				</td>
+				<td rowspan=2 class="bottom">
+					A9
+				</td>
+				<td rowspan=2 class="bottom right end">
+					Dead End
+				</td>
+				<td id="track-A11-Cell" rowspan=2 class="left right">
+					<button id="A11" onclick="spoiler('A11')">T2</button>
+					<input type="checkbox" class="check" id="track-A11" onclick="track('track-A11')">
+					<input type="hidden" value="Progressive Sword" id="A11S"><br>
+					<p id="A11R"></p>
+				</td>
+				<td id="track-A12-Cell" rowspan=2 colspan=2 class="left right">
+					<button id="A12" class="dungeon" onclick="spoiler('A12')">Level 5</button>
+					<input type="checkbox" class="check" id="track-A12" onclick="track('track-A12')">
+					<input type="hidden" value="T5 - Recorder" id="A12S"><br>
+					<p id="A12R"></p>
+				</td>
+				<td id="track-A13-50-Cell">
+					<button id="A13-50" class="bonus" onclick="spoiler('A13-50')">50 R</button>
+					<input type="checkbox" class="check" id="track-A13-50" onclick="track('track-A13-50')">
+					<input type="hidden" value="Blue Candle" id="A13-50S"><br>
+					<p id="A13-50R"></p>
+				</td>
+				<td id="track-A13-150-Cell" rowspan=2 class="light lottom">
+					<button id="A13-150" class="bonus" onclick="spoiler('A13-150')">150 R</button>
+					<input type="checkbox" class="check" id="track-A13-150" onclick="track('track-A13-150')">
+					<input type="hidden" value="Progressive Shield" id="A13-150S"><br>
+					<p id="A13-150R"></p>
+				</td>
+				<td colspan=2 id="track-A14-50-Cell">
+					<button id="A14-50" class="bomb" onclick="spoiler('A14-50')">50 R</button>
+					<input type="checkbox" class="check" id="track-A14-50" onclick="track('track-A14-50')">
+					<input type="hidden" value="Potion" id="A14-50S"><br>
+					<p id="A14-50R"></p>
+				</td>
+				<td id="track-A15-Cell" rowspan=2 colspan=2 class="left right">
+					<button id="A15" onclick="spoiler('A15')">Free</button>
+					<input type="checkbox" class="check" id="track-A15" onclick="track('track-A15')">
+					<input type="hidden" value="A Letter" id="A15S"><br>
+					<p id="A15R"></p>
+				</td>
+				<td id="track-A16-Cell" rowspan=2 class="left right">
+					<button id="A16" onclick="spoiler('A16')">Free</button>
+					<input type="checkbox" class="check" id="track-A16" onclick="track('track-A16')">
+					<input type="hidden" value="100 R" id="A16S"><br>
+					<p id="A16R"></p>					
+				</td>
+			</tr>
+			<tr>
+				<td id="track-A5-100-Cell" class="bottom" colspan=2>
+					<button id="A5-100" onclick="spoiler('A5-100')">100 R</button>
+					<input type="checkbox" class="check" id="track-A5-100" onclick="track('track-A5-100')">
+					<input type="hidden" value="2 Potions" id="A5-100S"><br>
+					<p id="A5-100R"></p>
+				</td>
+				<td id="track-A13-100-Cell" class="lottom">
+					<button id="A13-100" class="bonus" onclick="spoiler('A13-100')">100 R</button>
+					<input type="checkbox" class="check" id="track-A13-100" onclick="track('track-A13-100')">
+					<input type="hidden" value="Key" id="A13-100S"><br>
+					<p id="A13-100R"></p>
+				</td>
+				<td colspan=2 id="track-A14-100-Cell">
+					<button id="A14-100" class="bomb" onclick="spoiler('A14-100')">100 R</button>
+					<input type="checkbox" class="check" id="track-A14-100" onclick="track('track-A14-100')">
+					<input type="hidden" value="2 Potions" id="A14-100S"><br>
+					<p id="A14-100R"></p>
+				</td>
+			</tr>
+			<tr>
+				<td rowspan=2 class="left bottom end">
+					Dead End
+				</td>
+				<td rowspan=2 class="bottom right">
+					B2
+				</td>
+				<td colspan=2 class="left" id="track-B3-50-Cell">
+					<button id="B3-50" onclick="spoiler('B3-50')" class="bomb">50 R</button>
+					<input type="checkbox" class="check" id="track-B3-50" onclick="track('track-B3-50')">
+					<input type="hidden" value="Food" id="B3-50S">
+					<p id="B3-50R"></p>
+				</td>
+				<td rowspan=2 colspan=2 class="bottom" id="track-B4-Cell">
+					<button id="B4" onclick="spoiler('B4')" class="bomb">Free</button>
+					<input type="checkbox" class="check" id="track-B4" onclick="track('track-B4')">
+					<input type="hidden" value="50 R" id="B4S">
+					<p id="B4R"></p>
+				</td>
+				<td rowspan=2 class="top" colspan=2>
+					B5
+				</td>
+				<td rowspan=2 class="top">
+					B6
+				</td>
+				<td rowspan=2 colspan=2 class="bottom top">
+					B7
+				</td>
+				<td rowspan=2>
+					Ladder<br>&lt;--&gt;
+				</td>
+				<td rowspan=2 class="bottom top">
+					B9
+				</td>
+				<td rowspan=2 class="bottom top">
+					B10
+				</td>
+				<td rowspan=2 class="bottom">
+					B11
+				</td>
+				<td rowspan=2 colspan=2 class="bottom">
+					&lt;- Only one
+				</td>
+				<td rowspan=2 colspan=2>
+					B13
+				</td>
+				<td rowspan=2 class="top right warp">
+					Warp
+				</td>
+				<td rowspan=2 class="left">
+					B14
+				</td>
+				<td rowspan=2 colspan=2 class="bottom">
+					B15
+				</td>
+				<td id="track-B16+-Cell" class="right">
+					<button id="B16+" onclick="spoiler('B16+')">Win</button>
+					<input type="checkbox" class="check" id="track-B16+" onclick="track('track-B16+')">
+					<input type="hidden" value="50 R" id="B16+S">
+					<p id="B16+R"></p>
+				</td>
+			</tr>
+			<tr>
+				<td colspan=2 class="bottom" id="track-B3-100-Cell">
+					<button id="B3-100" onclick="spoiler('B3-100')" class="bomb">100 R</button>
+					<input type="checkbox" class="check" id="track-B3-100" onclick="track('track-B3-100')">
+					<input type="hidden" value="Progressive Shield" id="B3-100S">
+					<p id="B3-100R"></p>
+				</td>
+				<td id="track-B16--Cell" class="right bottom">
+					<button id="B16-" onclick="spoiler('B16-')">Lose</button>
+					<input type="checkbox" class="check" id="track-B16-" onclick="track('track-B16-')">
+					<input type="hidden" value="-50 R" id="B16-S">
+					<p id="B16-R"></p>
+				</td>
+			</tr>
+			<tr>
+				<td class="left top" rowspan=2>
+					C1
+				</td>
+				<td id="track-C2-Cell" class="top" rowspan=2>
+					<button id="C2" onclick="spoiler('C2')">T1-6</button>
+					<input type="checkbox" class="check" id="track-C2" onclick="track('track-C2')">
+					<input type="hidden" value="Progressive Sword" id="C2S">
+					<p id="C2R"></p>
+				</td>
+				<td id="track-C3-Cell" colspan=2 class="top left right" rowspan=2>
+					<button id="C3" class="dungeon" onclick="spoiler('C3')">Level 6</button>
+					<input type="checkbox" class="check" id="track-C3" onclick="track('track-C3')">
+					<input type="hidden" value="T6 - Magical Rod" id="C3S">
+					<p id="C3R"></p>
+				</td>
+				<td class="left top right warp" rowspan=2>
+					Warp
+				</td>
+				<td rowspan=2>
+					C4
+				</td>
+				<td id="track-C5-Cell" class="top bottom" rowspan=2 colspan=2>
+					<button id="C5" onclick="spoiler('C5')">Free</button>
+					<input type="checkbox" class="check" id="track-C5" onclick="track('track-C5')">
+					<input type="hidden" value="Progressive Bracelet" id="C5S">
+					<p id="C5R"></p>
+				</td>
+				<td class="right" id="track-C6-50-Cell">
+					<button id="C6-50" onclick="spoiler('C6-50')" class="bonus">50 R</button>
+					<input type="checkbox" class="check" id="track-C6-50" onclick="track('track-C6-50')">
+					<input type="hidden" value="Bomb" id="C6-50S">
+					<p id="C6-50R"></p>
+				</td>
+				<td colspan=2 class="left top" id="track-C7-50-Cell">
+					<button id="C7-50" onclick="spoiler('C7-50')" class="bonus">50 R</button>
+					<input type="checkbox" class="check" id="track-C7-50" onclick="track('track-C7-50')">
+					<input type="hidden" value="Food" id="C7-50S">
+					<p id="C7-50R"></p>
+				</td>
+				<td class="bottom" rowspan=2>
+					Ladder<br>&lt;--&gt;
+				</td>
+				<td class="top" id="track-C9-50-Cell">
+					<button id="C9-50" onclick="spoiler('C9-50')" class="bonus">50 R</button>
+					<input type="checkbox" class="check" id="track-C9-50" onclick="track('track-C9-50')">
+					<input type="hidden" value="Potion" id="C9-50S">
+					<p id="C9-50R"></p>
+				</td>
+				<td class="bottom top" rowspan=2 id="track-C10-Cell">
+					<button id="C10" onclick="spoiler('C10')" class="bomb">Free</button>
+					<input type="checkbox" class="check" id="track-C10" onclick="track('track-C10')">
+					<input type="hidden" value="50 R" id="C10S">
+					<p id="C10R"></p>
+				</td>
+				<td class="top" rowspan=2>
+					C11
+				</td>
+				<td class="top" colspan=2 rowspan=2>
+					C12
+				</td>
+				<td colspan=2 class="bottom" rowspan=2>
+					C13
+				</td>
+				<td rowspan=2 colspan=2 id="track-C14-Cell">
+					<button id="C14" onclick="spoiler('C14')" class="bomb">Free</button>
+					<input type="checkbox" class="check" id="track-C14" onclick="track('track-C14')">
+					<input type="hidden" value="2 Potions" id="C14S">
+					<p id="C14R"></p>
+				</td>
+				<td class="top right" rowspan=2 colspan=2>
+					C15
+				</td>
+				<td id="track-C16-Cell" class="right top left" rowspan=2>
+					<button id="C16" onclick="spoiler('C16')">Win</button>
+					<input type="checkbox" class="check" id="track-C16" onclick="track('track-C16')">
+					<input type="hidden" value="Potion" id="C16S">
+					<p id="C16R"></p>
+				</td>
+			</tr>
+			<tr>
+				<td class="right" id="track-C6-100-Cell">
+					<button id="C6-100" onclick="spoiler('C6-100')" class="bonus">100 R</button>
+					<input type="checkbox" class="check" id="track-C6-100" onclick="track('track-C6-100')">
+					<input type="hidden" value="Progressive Shield" id="C6-100S">
+					<p id="C6-100R"></p>
+				</td>
+				<td colspan=2 class="left" id="track-C7-100-Cell">
+					<button id="C7-100" onclick="spoiler('C7-100')" class="bonus">100 R</button>
+					<input type="checkbox" class="check" id="track-C7-100" onclick="track('track-C7-100')">
+					<input type="hidden" value="Progressive Shield" id="C7-100S">
+					<p id="C7-100R"></p>
+				</td>
+				<td id="track-C9-100-Cell">
+					<button id="C9-100" onclick="spoiler('C9-100')" class="bonus">100 R</button>
+					<input type="checkbox" class="check" id="track-C9-100" onclick="track('track-C9-100')">
+					<input type="hidden" value="2 Potions" id="C9-100S">
+					<p id="C9-100R"></p>
+				</td>
+			</tr>
+			<tr>
+				<td rowspan=2 class="left">
+					D1
+				</td>
+				<td rowspan=2>
+					D2
+				</td>
+				<td rowspan=2 colspan=2 class="bottom">
+					D3
+				</td>
+				<td colspan=2 id="track-D4-50-Cell">
+					<button id="D4-50" onclick="spoiler('D4-50')" class="bomb">50 R</button>
+					<input type="checkbox" class="check" id="track-D4-50" onclick="track('track-D4-50')">
+					<input type="hidden" value="Potion" id="D4-50S">
+					<p id="D4-50R"></p>
+				</td>
+				<td id="track-D5-50-Cell" class="left top">
+					<button id="D5-50" onclick="spoiler('D5-50')">50 R</button>
+					<input type="checkbox" class="check" id="track-D5-50" onclick="track('track-D5-50')">
+					<input type="hidden" value="Food" id="D5-50S">
+					<p id="D5-50R"></p>
+				</td>
+				<td id="track-D5-100-Cell" class="top right lottom" rowspan=2>
+					<button id="D5-100" onclick="spoiler('D5-100')" class="bonus">100 R</button>
+					<input type="checkbox" class="check" id="track-D5-100" onclick="track('track-D5-100')">
+					<input type="hidden" value="Key" id="D5-100S">
+					<p id="D5-100R"></p>
+				</td>
+				<td rowspan=2 class="bottom left">
+					D6
+				</td>
+				<td colspan=2 rowspan=2 class="bottom right">
+					D7
+				</td>
+				<td id="track-D8-Cell" rowspan=2 class="top bottom left">
+					<button id="D8" class="dungeon" onclick="spoiler('D8')">Level 1</button>
+					<input type="checkbox" class="check" id="track-D8" onclick="track('track-D8')">
+					<input type="hidden" value="T1 - Bow" id="D8S">
+					<p id="D8R"></p>
+				</td>
+				<td rowspan=2 class="right">
+					D9
+				</td>
+				<td rowspan=2 class="top right left fairy">
+					Fairy Fountain
+				</td>
+				<td rowspan=2 class="left">
+					D11
+				</td>
+				<td rowspan=2 colspan=2 class="right">
+					D12
+				</td>
+				<td id="track-D13-Cell" colspan=2 rowspan=2 class="top left right">
+					<button id="D13" class="dungeon" onclick="spoiler('D13')">Level 2</button>
+					<input type="checkbox" class="check" id="track-D13" onclick="track('track-D13')">
+					<input type="hidden" value="T2 - Boomerang" id="D13S">
+					<p id="D13R"></p>
+				</td>
+				<td rowspan=2 colspan=2 class="left right" id="track-D14-Cell">
+					<button id="D14" class="bonus" onclick="spoiler('D14')">Bracelet</button>
+					<input type="checkbox" class="check" id="track-D14" onclick="track('track-D14')">
+					<input type="hidden" value="100 R" id="D14S">
+					<p id="D14R"></p>
+				</td>
+				<td rowspan=2 class="left bottom" colspan=2>
+					D15
+				</td>
+				<td rowspan=2 class="right">
+					^<br>Raft
+				</td>
+			</tr>
+			<tr>
+				<td colspan=2 class="bottom right" id="track-D4-100-Cell">
+					<button id="D4-100" onclick="spoiler('D4-100')" class="bomb">100 R</button>
+					<input type="checkbox" class="check" id="track-D4-100" onclick="track('track-D4-100')">
+					<input type="hidden" value="2 Potions" id="D4-100S">
+					<p id="D4-100R"></p>
+				</td>
+				<td id="track-D5-250-Cell" class="lottom">
+					<button id="D5-250" onclick="spoiler('D5-250')">250 R</button>
+					<input type="checkbox" class="check" id="track-D5-250" onclick="track('track-D5-250')">
+					<input type="hidden" value="Progressive Ring" id="D5-250S">
+					<p id="D5-250R"></p>
+				</td>
+			</tr>
+			<tr>
+				<td class="left" rowspan=2>
+					E1
+				</td>
+				<td class="bottom right" rowspan=2>
+					E2
+				</td>
+				<td id="track-E3-Cell" colspan=2 class="top right left" rowspan=2>
+					<button id="E3" class="dungeon" onclick="spoiler('E3')">Level 7</button>
+					<input type="checkbox" class="check" id="track-E3" onclick="track('track-E3')">
+					<input type="hidden" value="T7 - Candle" id="E3S">
+					<p id="E3R"></p>
+				</td>
+				<td colspan=2 class="top right left fairy" rowspan=2>
+					Fairy Fountain
+				</td>
+				<td id="track-E5-50-Cell" class="left" colspan=2>
+					<button id="E5-50" class="bonus" onclick="spoiler('E5-50')">50 R</button>
+					<input type="checkbox" class="check" id="track-E5-50" onclick="track('track-E5-50')">
+					<input type="hidden" value="Bomb" id="E5-50S">
+					<p id="E5-50R"></p>
+				</td>
+				<td id="track-E6-Cell" class="top left right" rowspan=2>
+					<button id="E6" class="dungeon" onclick="spoiler('E6')">Level 4</button>
+					<input type="checkbox" class="check" id="track-E6" onclick="track('track-E6')">
+					<input type="hidden" value="T4 - Ladder" id="E6S">
+					<p id="E6R"></p>
+				</td>
+				<td colspan=2 id="track-E7-50-Cell" class="top left">
+					<button id="E7-50" class="bomb" onclick="spoiler('E7-50')">50 R</button>
+					<input type="checkbox" class="check" id="track-E7-50" onclick="track('track-E7-50')">
+					<input type="hidden" value="Food" id="E7-50S">
+					<p id="E7-50R"></p>
+				</td>
+				<td class="top bottom" rowspan=2>
+					E8
+				</td>
+				<td class="right" rowspan=2 id="track-E9-Cell">
+					<button id="E9" class="bomb" onclick="spoiler('E9')">Free</button>
+					<input type="checkbox" class="check" id="track-E9" onclick="track('track-E9')">
+					<input type="hidden" value="50 R" id="E9S">
+					<p id="E9R"></p>
+				</td>
+				<td class="left warp" rowspan=2>
+					Warp
+				</td>
+				<td class="bottom" rowspan=2>
+					E11
+				</td>
+				<td class="right top" rowspan=2 id="track-E12-50-Cell">
+					<!-- Left -->
+					<button id="E12-50" class="bonus" onclick="spoiler('E12-50')">50 R</button>
+					<input type="checkbox" class="check" id="track-E12-50" onclick="track('track-E12-50')">
+					<input type="hidden" value="Potion" id="E12-50S">
+					<p id="E12-50R"></p>
+				</td>
+				<td class="left right" rowspan=2 id="track-E12-100-Cell">
+					<!-- Right -->
+					<button id="E12-100" class="bonus" onclick="spoiler('E12-100')">100 R</button>
+					<input type="checkbox" class="check" id="track-E12-100" onclick="track('track-E12-100')">
+					<input type="hidden" value="2 Potions" id="E12-100S">
+					<p id="E12-100R"></p>
+				</td>
+				<td colspan=2 class="left bottom" rowspan=2>
+					E13
+				</td>
+				<td colspan=2 id="track-E14-50-Cell">
+					<button id="E14-50" class="bomb" onclick="spoiler('E14-50')">50 R</button>
+					<input type="checkbox" class="check" id="track-E14-50" onclick="track('track-E14-50')">
+					<input type="hidden" value="Food" id="E14-50S">
+					<p id="E14-50R"></p>
+				</td>
+				<td class="top right end" colspan=2>
+					Dead End
+				</td>
+				<td id="track-E16-Cell" class="left right" rowspan=2>
+					<button id="E16" class="bonus" onclick="spoiler('E16')">Ladder</button>
+					<input type="checkbox" class="check" id="track-E16" onclick="track('track-E16')">
+					<input type="hidden" value="2 Potions" id="E16S">
+					<p id="E16R"></p>
+				</td>
+			</tr>
+			<tr>
+				<td id="track-E5-100-Cell" class="left" colspan=2>
+					<button id="E5-100" class="bonus" onclick="spoiler('E5-100')">100 R</button>
+					<input type="checkbox" class="check" id="track-E5-100" onclick="track('track-E5-100')">
+					<input type="hidden" value="Progressive Shield" id="E5-100S">
+					<p id="E5-100R"></p>
+				</td>
+				<td colspan=2 id="track-E7-100-Cell" class="left">
+					<button id="E7-100" class="bomb" onclick="spoiler('E7-100')">100 R</button>
+					<input type="checkbox" class="check" id="track-E7-100" onclick="track('track-E7-100')">
+					<input type="hidden" value="Progressive Shield" id="E7-100S">
+					<p id="E7-100R"></p>
+				</td>
+				<td colspan=2 id="track-E14-100-Cell">
+					<button id="E14-100" class="bomb" onclick="spoiler('E14-100')">100 R</button>
+					<input type="checkbox" class="check" id="track-E14-100" onclick="track('track-E14-100')">
+					<input type="hidden" value="Progressive Shield" id="E14-100S">
+					<p id="E14-100R"></p>
+				</td>
+				<td id="track-E15-Cell" class="bottom end" colspan=2>
+					<button id="E15" class="bonus" onclick="spoiler('E15')">Bracelet</button>
+					<input type="checkbox" class="check" id="track-E15" onclick="track('track-E15')">
+					<input type="hidden" value="50 R" id="E15S">
+					<p id="E15R"></p>
+				</td>
+			</tr>
+			<tr>
+				<td class="left right" rowspan=2>
+					F1
+				</td>
+				<td class="left top" rowspan=2 id="track-F2-Cell">
+					<button id="F2" class="bomb" onclick="spoiler('F2')">Free</button>
+					<input type="checkbox" class="check" id="track-F2" onclick="track('track-F2')">
+					<input type="hidden" value="50 R" id="F2S">
+					<p id="F2R"></p>
+				</td>
+				<td colspan=2 rowspan=2>
+					F3
+				</td>
+				<td colspan=2 rowspan=2>
+					F4
+				</td>
+				<td rowspan=2 colspan=2>
+					F5
+				</td>
+				<td rowspan=2>
+					^<br>Raft
+				</td>
+				<td colspan=2 class="bottom" rowspan=2 id="track-F7-Cell">
+					<button id="F7" class="bomb" onclick="spoiler('F7')">Free</button>
+					<input type="checkbox" class="check" id="track-F7" onclick="track('track-F7')">
+					<input type="hidden" value="50 R" id="F7S">
+					<p id="F7R"></p>
+				</td>
+				<td class="bottom top" rowspan=2>
+					F8
+				</td>
+				<td rowspan=2>
+					F9
+				</td>
+				<td rowspan=2>
+					F10
+				</td>
+				<td class="top" rowspan=2>
+					F11
+				</td>
+				<td colspan=2 rowspan=2 id="track-F12-Cell">
+					<button id="F12" class="bomb" onclick="spoiler('F12')">Free</button>
+					<input type="checkbox" class="check" id="track-F12" onclick="track('track-F12')">
+					<input type="hidden" value="50 R" id="F12S">
+					<p id="F12R"></p>
+				</td>
+				<td class="top">
+					
+				</td>
+				<td>
+					F13
+				</td>
+				<td colspan=2 rowspan=2>
+					F14
+				</td>
+				<td id="track-F15-50-Cell" class="top llft">
+					<button id="F15-50" onclick="spoiler('F15-50')" class="bonus">50 R</button>
+					<input type="checkbox" class="check" id="track-F15-50" onclick="track('track-F15-50')">
+					<input type="hidden" value="Blue Candle" id="F15-50S">
+					<p id="F15-50R"></p>
+				</td>
+				<td id="track-F15-150-Cell" class="top right" rowspan=2>
+					<button id="F15-150" onclick="spoiler('F15-150')" class="bonus">150 R</button>
+					<input type="checkbox" class="check" id="track-F15-150" onclick="track('track-F15-150')">
+					<input type="hidden" value="Progressive Shield" id="F15-150S">
+					<p id="F15-150R"></p>
+				</td>
+				<td class="right left" rowspan=2>
+					F16
+				</td>
+			</tr>
+			<tr>
+				<td class="right top">
+					F13
+				</td>
+				<td>
+					
+				</td>
+				<td id="track-F15-100-Cell" class="bottom llft">
+					<button id="F15-100" onclick="spoiler('F15-100')" class="bonus">100 R</button>
+					<input type="checkbox" class="check" id="track-F15-100" onclick="track('track-F15-100')">
+					<input type="hidden" value="Key" id="F15-100S">
+					<p id="F15-100R"></p>
+				</td>
+			</tr>
+			<tr>
+				<td rowspan=2 class="left bottom">
+					G1
+				</td>
+				<td rowspan=2>
+					&lt;- Odd #
+				</td>
+				<td rowspan=2 class="right" id="track-G3-Cell">
+					<button id="G3" class="bomb" onclick="spoiler('G3')">Free</button>
+					<input type="checkbox" class="check" id="track-G3" onclick="track('track-G3')">
+					<input type="hidden" value="100 R" id="G3S">
+					<p id="G3R"></p>
+				</td>
+				<td rowspan=2 class="left bottom">
+					G3
+				</td>
+				<td rowspan=2 colspan=2>
+					G4
+				</td>
+				<td id="track-G5-50-Cell" colspan=2>
+					<button id="G5-50" onclick="spoiler('G5-50')">50 R</button>
+					<input type="checkbox" class="check" id="track-G5-50" onclick="track('track-G5-50')">
+					<input type="hidden" value="Potion" id="G5-50S">
+					<p id="G5-50R"></p>
+				</td>
+				<td rowspan=2 class="bottom">
+					G6
+				</td>
+				<td class="top" id="track-G7-50-Cell">
+					<button id="G7-50" onclick="spoiler('G7-50')" class="bonus">50 R</button>
+					<input type="checkbox" class="check" id="track-G7-50" onclick="track('track-G7-50')">
+					<input type="hidden" value="Blue Candle" id="G7-50S">
+					<p id="G7-50R"></p>
+				</td>
+				<td class="top" rowspan=2 id="track-G7-150-Cell">
+					<button id="G7-150" onclick="spoiler('G7-150')" class="bonus">150 R</button>
+					<input type="checkbox" class="check" id="track-G7-150" onclick="track('track-G7-150')">
+					<input type="hidden" value="Progressive Shield" id="G7-150S">
+					<p id="G7-150R"></p>
+				</td>
+				<td rowspan=2 class="top" id="track-G8-Cell">
+					<button id="G8" class="bomb" onclick="spoiler('G8')">Free</button>
+					<input type="checkbox" class="check" id="track-G8" onclick="track('track-G8')">
+					<input type="hidden" value="100 R" id="G8S">
+					<p id="G8R"></p>
+				</td>
+				<td rowspan=2>
+					G9
+				</td>
+				<td rowspan=2 class="bottom">
+					G10
+				</td>
+				<td rowspan=2 class="bottom">
+					G11
+				</td>
+				<td colspan=2 rowspan=2 id="track-G12-Cell">
+					<button id="G12" class="bomb" onclick="spoiler('G12')">Free</button>
+					<input type="checkbox" class="check" id="track-G12" onclick="track('track-G12')">
+					<input type="hidden" value="2 Potions" id="G12S">
+					<p id="G12R"></p>
+				</td>
+				<td rowspan=2 class="bottom right">
+					G13
+				</td>
+				<td rowspan=2 class="bottom left">
+					G13
+				</td>
+				<td id="track-G14-Cell" rowspan=2 colspan=2 class="bottom">
+					<button id="G14" class="dungeon" onclick="spoiler('G14')">Level 8</button>
+					<input type="checkbox" class="check" id="track-G14" onclick="track('track-G14')">
+					<input type="hidden" value="T8 - Magical Book & Key" id="G14S">
+					<p id="G14R"></p>
+				</td>
+				<td rowspan=2 class="bottom top" colspan=2>
+					G15
+				</td>
+				<td id="track-G16-50-Cell" class="right lop llft">
+					<button id="G16-50" onclick="spoiler('G16-50')" class="bonus">50 R</button>
+					<input type="checkbox" class="check" id="track-G16-50" onclick="track('track-G16-50')">
+					<input type="hidden" value="Bomb" id="G16-50S">
+					<p id="G16-50R"></p>
+				</td>
+			</tr>
+			<tr>
+				<td id="track-G5-100-Cell" class="bottom" colspan=2>
+					<button id="G5-100" onclick="spoiler('G5-100')">100 R</button>
+					<input type="checkbox" class="check" id="track-G5-100" onclick="track('track-G5-100')">
+					<input type="hidden" value="2 Potions" id="G5-100S">
+					<p id="G5-100R"></p>
+				</td>
+				<td id="track-G7-100-Cell">
+					<button id="G7-100" onclick="spoiler('G7-100')" class="bonus">100 R</button>
+					<input type="checkbox" class="check" id="track-G7-100" onclick="track('track-G7-100')">
+					<input type="hidden" value="Key" id="G7-100S">
+					<p id="G7-100R"></p>
+				</td>
+				<td id="track-G16-100-Cell" class="right lottom llft">
+					<button id="G16-100" onclick="spoiler('G16-100')">100 R</button>
+					<input type="checkbox" class="check" id="track-G16-100" onclick="track('track-G16-100')">
+					<input type="hidden" value="Progressive Shield" id="G16-100S">
+					<p id="G16-100R"></p>
+				</td>
+			</tr>
+			<tr class="bottom">
+				<td rowspan=2 class="left top bottom end">
+					Dead End
+				</td>
+				<td rowspan=2 class="bottom" id="track-H2-Cell">
+					<button id="H2" class="bomb" onclick="spoiler('H2')">Free</button>
+					<input type="checkbox" class="check" id="track-H2" onclick="track('track-H2')">
+					<input type="hidden" value="50 R" id="H2S">
+					<p id="H2R"></p>
+				</td>
+				<td colspan=2 class="bottom left">
+					H3
+				</td>
+				<td rowspan=2 colspan=2 class="bottom">
+					H4
+				</td>
+				<td id="track-H5-Cell" rowspan=2 colspan=2 class="right top bottom">
+					<button id="H5" class="dungeon" onclick="spoiler('H5')">Level 3</button>
+					<input type="checkbox" class="check" id="track-H5" onclick="track('track-H5')">
+					<input type="hidden" value="T3 - Raft" id="H5S">
+					<p id="H5R"></p>
+				</td>
+				<td rowspan=2 class="top bottom" id="track-H6-Cell">
+					<button id="H6" class="bonus" onclick="spoiler('H6')">Free</button>
+					<input type="checkbox" class="check" id="track-H6" onclick="track('track-H6')">
+					<input type="hidden" value="50 R" id="H6S">
+					<p id="H6R"></p>
+				</td>
+				<td colspan=2 rowspan=2 class="bottom">
+					H7
+				</td>
+				<td rowspan=2 class="bottom">
+					Start
+				</td>
+				<td id="track-H9-50-Cell">
+					<button id="H9-50" onclick="spoiler('H9-50')" class="bomb">50 R</button>
+					<input type="checkbox" class="check" id="track-H9-50" onclick="track('track-H9-50')">
+					<input type="hidden" value="Potion" id="H9-50S">
+					<p id="H9-50R"></p>
+				</td>
+				<td rowspan=2 class="top bottom warp">
+					Warp
+				</td>
+				<td rowspan=2 class="top bottom">
+					H11
+				</td>
+				<td rowspan=2 colspan=2 class="bottom">
+					H12
+				</td>
+				<td colspan=2 rowspan=2 class="bottom">
+					H13
+				</td>
+				<td rowspan=2 colspan=2 class="bottom">
+					H14
+				</td>
+				<td rowspan=2 class="bottom" colspan=2>
+					H15
+				</td>
+				<td rowspan=2 class="right bottom">
+					H16
+				</td>
+			</tr>
+			<tr>
+				<td colspan=2 class="bottom" style="border-left:1px solid white">
+					H3
+				</td>
+				<td id="track-H9-100-Cell" class="bottom">
+					<button id="H9-100" onclick="spoiler('H9-100')" class="bomb">100 R</button>
+					<input type="checkbox" class="check" id="track-H9-100" onclick="track('track-H9-100')">
+					<input type="hidden" value="2 Potions" id="H9-100S">
+					<p id="H9-100R"></p>
+				</td>
+			</tr>
+		</table>
+		
+		<table border="1" style="display:inline-block; float:right;">
+			<tr>
+				<th colspan=5 class="info">
+					The Important Stuff
+				</th>
+			</tr>
+			<tr>
+				<td class="info" colspan=2>
+					Game Turns
+					<br>
+					<button id="turns-" onclick="important('turns-')">-</button>
+					<button id="turns+" onclick="important('turns+')">+</button>
+				</td>
+				<td id="turns" class="info" colspan=3>
+					0
+				</td>
+			</tr>
+			<tr>
+				<td class="info" colspan=2>
+					First Key Item
+					<br>
+					<button id="fkey-" onclick="important('fkey-')">-</button>
+					<button id="fkey+" onclick="important('fkey+')">+</button>
+				</td>
+				<td id="fkey" class="info" colspan=3>
+					0
+				</td>
+			</tr>
+			<tr>
+				<td class="info" colspan=2>
+					Money Making Games
+					<br>
+					<button id="mmg-" onclick="important('mmg-')">-</button>
+					<button id="mmg+" onclick="important('mmg+')">+</button>
+				</td>
+				<td id="mmg" class="info" colspan=3>
+					0
+				</td>
+			</tr>
+			<tr>
+				<td class="info" colspan=2>
+					Deaths
+					<br>
+					<button id="deaths-" onclick="important('deaths-')">-</button>
+					<button id="deaths+" onclick="important('deaths+')">+</button>
+				</td>
+				<td id="deaths" class="info" colspan=3>
+					0
+				</td>
+			</tr>
+			<tr>
+				<td class="info" colspan=2>
+					Fairy Fountain Revivals
+					<br>
+					<button id="ffr-" onclick="important('ffr-')">-</button>
+					<button id="ffr+" onclick="important('ffr+')">+</button>
+				</td>
+				<td id="ffr" class="info" colspan=3>
+					0
+				</td>
+			</tr>
+			<tr>
+				<td class="info" colspan=2>
+					Potion Revivals
+					<br>
+					<button id="potr-" onclick="important('potr-')">-</button>
+					<button id="potr+" onclick="important('potr+')">+</button>
+				</td>
+				<td id="potr" class="info" colspan=3>
+					0
+				</td>
+			</tr>
+			<tr>
+				<td class="info" colspan=2>
+					Collection Rate
+				</td>
+				<td id="collect" class="info" rowspan=2>0</td>
+				<td class="info" rowspan=2>/</td>
+				<td id="collectm" class="info" rowspan=2>23</td>
+			</tr>
+			<tr>
+				<td>
+					<button id="collect-" onclick="important('collect-')">-</button>
+					<button id="collect+" onclick="important('collect+')">+</button>
+				</td>
+				<td>
+					<button id="collectm-" onclick="important('collectm-')">-</button>
+					<button id="collectm+" onclick="important('collectm+')">+</button>
+				</td>
+			</tr>
+		</table>
+		<table border="1" style="float: left;">
+			<tr>
+				<th colspan=22>Player Card</th>
+			</tr>
+			<tr>
+				<th rowspan=2>Hearts:</th>
+				<td id="hpc">5</td>
+				<td>/</td>
+				<td id="hpm">5</td>
+				<th rowspan=2>Sword:</th>
+				<td id="sw">Wooden</td>
+				<th rowspan=2>Shield:</th>
+				<td id="sd">None</td>
+				<th rowspan=2>Ring:</th>
+				<td id="ri">Green</td>
+				<th rowspan=2>Bracelet:</th>
+				<td id="br">Weak</td>
+				<th rowspan=2>Food:</th>
+				<td id="fd">Hungry</td>
+				<th rowspan=2>Letters:</th>
+				<td id="lt">0</td>
+				<th rowspan=2>Potions:</th>
+				<td id="pt">0</td>
+			</tr>
+			<tr>
+				<td>
+					<button id="hpc-" onclick="important('hpc-')">-</button>
+					<button id="hpc+" onclick="important('hpc+')">+</button>
+				</td>
+				<td>/</td>
+				<td>
+					<button id="hpm-" onclick="important('hpm-')">-</button>
+					<button id="hpm+" onclick="important('hpm+')">+</button>
+				</td>
+				<td>
+					<button id="sw-" onclick="important('swd')">-</button>
+					<button id="sw+" onclick="important('swb')">+</button>
+				</td>
+				<td>
+					<button id="sd-" onclick="important('sdd')">-</button>
+					<button id="sd+" onclick="important('sdb')">+</button>
+				</td>
+				<td>
+					<button id="ri-" onclick="important('rid')">-</button>
+					<button id="ri+" onclick="important('rib')">+</button>
+				</td>
+				<td>
+					<button id="br-" onclick="important('brd')">-</button>
+					<button id="br+" onclick="important('brb')">+</button>
+				</td>
+				<td>
+					<button id="fd-" onclick="important('fdd')">-</button>
+					<button id="fd+" onclick="important('fdb')">+</button>
+				</td>
+				<td>
+					<button id="lt-" onclick="important('lt-')">-</button>
+					<button id="lt+" onclick="important('lt+')">+</button>
+				</td>
+				<td>
+					<button id="pt-" onclick="important('pt-')">-</button>
+					<button id="pt+" onclick="important('pt+')">+</button>
+				</td>
+			</tr>
+			<tr>
+				<th rowspan=2>Rupees:</th>
+				<td id="rups">0</td>
+				<td>/</td>
+				<td id="rupm">250</td>
+			</tr>
+			<tr>
+				<td>
+					<button id="rups-" onclick="important('rups%')">-</button>
+					<button id="rups+" onclick="important('rups$')">+</button>
+				</td>
+				<td>/</td>
+				<td>
+					<button id="rupm-" onclick="important('rupm%')">-</button>
+					<button id="rupm+" onclick="important('rupm$')">+</button>
+				</td>
+			</tr>
+		</table>
+		
+		<script>
+			function get() {
+				var vars = {};
+				var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value){
+					vars[key] = value;
+				});
+				return vars;
+			};
+			function shuffle(a){
+				var j, x, i;
+				for (i = a.length - 1; i > 0; i--){
+					j = Math.floor(Math.random() * (i + 1));
+					x = a[i];
+					a[i] = a[j];
+					a[j] = x;
+				}
+				return a;
+			};
+			function logic(item_use){
+				if(item_use[0]=="T2"||item_use[11]=="T3 - Raft"||item_use[3]=="T1"||item_use[3]=="T2"||item_use[3]=="T3 - Raft"||item_use[3]=="T4 - Ladder"||item_use[3]=="T5"||item_use[3]=="T6"){
+					shuffle(item_use);
+					logic(item_use);
+				}
+				return item_use;
+			};
+			function spoiler(id){
+				var value = document.getElementById(id+"S").value;
+				var target = document.getElementById(id+"R").innerHTML;
+				if(target == value){
+					document.getElementById(id+"R").innerHTML = "";
+				} else {
+					document.getElementById(id+"R").innerHTML = value;
+				}
+			};
+			function track(id){
+				var tracking = document.getElementById(id).checked;
+				if (tracking==true){
+					document.getElementById(id+"-Cell").style.backgroundColor = "green";
+					document.getElementById(id+"-Cell").style.color = "white";
+				} else if (tracking==false) {
+					document.getElementById(id+"-Cell").style.backgroundColor = "white";
+					document.getElementById(id+"-Cell").style.color = "black";
+					
+				} else {
+					document.getElementById(id+"-Cell").style.backgroundColor = "red";
+				}
+			};
+			function important(id){
+				var value = parseInt(document.getElementById(id.slice(0, id.length-1)).innerHTML);
+				var equation = id.slice(id.length-1, id.length);
+				switch(equation){
+					case "-":
+						value--;
+					break;
+					case "+":
+						value++;
+					break;
+					case "%":
+						value-=50;
+					break;
+					case "$":
+						value+=50;
+					break;
+					case "d":
+						var currVal = document.getElementById(id.slice(0, id.length-1)).innerHTML;
+						switch(currVal){
+						//swords
+							case "Wooden":
+								value = "Wooden";
+							break;
+							case "Master (+1)":
+								value = "Wooden";
+							break;
+							case "Biggoron's (+2)":
+								value = "Master (+1)";
+							break;
+							case "Tempered (+3)":
+								value = "Biggoron's (+2)";
+							break;
+							case "White (+4)":
+								value = "Tempered (+3)";
+							break;
+							case "Great Fairy's (+5)":
+								value = "White (+4)";
+							break;
+							case "Golden (+6)":
+								value = "Great Fairy's (+5)";
+							break;
+							case "Fierce Deity's (+7)":
+								value = "Golden (+6)";
+							break;
+						//Shields
+							case "None":
+								value = "None";
+							break;
+							case "Magical":
+								value = "None";
+							break;
+							case "Hylian (/T)":
+								value = "Magical";
+							break;
+							case "Mirror (+R)":
+								value = "Hylian (/T)";
+							break;
+						//Rings
+							case "Green":
+								value = "Green";
+							break;
+							case "Blue (+2)":
+								value = "Green";
+							break;
+							case "Red (+4)":
+								value = "Blue (+2)";
+							break;
+							case "Purple (+6)":
+								value = "Red (+4)";
+							break;
+							case "Black (+8)":
+								value = "Purple (+6)";
+							break;
+							case "Magic (+10)":
+								value = "Black (+8)";
+							break;
+						//Food
+							case "Hungry":
+								value = "Hungry";
+							break;
+							case "Snack":
+								value = "Hungry";
+							break;
+							case "Appetizer (M3)":
+								value = "Snack";
+							break;
+							case "Meal (M2)":
+								value = "Appetizer (M3)";
+							break;
+							case "Feast (M1)":
+								value = "Meal (M2)";
+							break;
+						//Bracelet
+							case "Weak":
+								value = "Weak";
+							break;
+							case "Bronze (W)":
+								value = "Weak";
+							break;
+							case "Silver (+FF/DE)":
+								value = "Bronze (W)";
+							break;
+							case "Gold (+DG)":
+								value = "Silver (+FF/DE)";
+							break;
+							case "Platinum (+SH)":
+								value = "Gold (+DG)";
+							break;
+							default:
+								//bruh
+								value = "Something went bruh";
+						}
+					break;
+					case "b":
+						var currVal = document.getElementById(id.slice(0, id.length-1)).innerHTML;
+						switch(currVal){
+						//swords
+							case "Wooden":
+								value = "Master (+1)";
+							break;
+							case "Master (+1)":
+								value = "Biggoron's (+2)";
+							break;
+							case "Biggoron's (+2)":
+								value = "Tempered (+3)";
+							break;
+							case "Tempered (+3)":
+								value = "White (+4)";
+							break;
+							case "White (+4)":
+								value = "Great Fairy's (+5)";
+							break;
+							case "Great Fairy's (+5)":
+								value = "Golden (+6)";
+							break;
+							case "Golden (+6)":
+								value = "Fierce Deity's (+7)";
+							break;
+							case "Fierce Deity's (+7)":
+								value = "Fierce Deity's (+7)";
+							break;
+						//Shields
+							case "None":
+								value = "Magical";
+							break;
+							case "Magical":
+								value = "Hylian (/T)";
+							break;
+							case "Hylian (/T)":
+								value = "Mirror (+R)";
+							break;
+							case "Mirror (+R)":
+								value = "Mirror (+R)";
+							break;
+						//Rings
+							case "Green":
+								value = "Blue (+2)";
+							break;
+							case "Blue (+2)":
+								value = "Red (+4)";
+							break;
+							case "Red (+4)":
+								value = "Purple (+6)";
+							break;
+							case "Purple (+6)":
+								value = "Black (+8)";
+							break;
+							case "Black (+8)":
+								value = "Magic (+10)";
+							break;
+							case "Magic (+10)":
+								value = "Magic (+10)";
+							break;
+						//Food
+							case "Hungry":
+								value = "Snack";
+							break;
+							case "Snack":
+								value = "Appetizer (M3)";
+							break;
+							case "Appetizer (M3)":
+								value = "Meal (M2)";
+							break;
+							case "Meal (M2)":
+								value = "Feast (M1)";
+							break;
+							case "Feast (M1)":
+								value = "Feast (M1)";
+							break;
+						//Bracelet
+							case "Weak":
+								value = "Bronze (W)";
+							break;
+							case "Bronze (W)":
+								value = "Silver (+FF/DE)"
+							break;
+							case "Silver (+FF/DE)":
+								value = "Gold (+DG)";
+							break;
+							case "Gold (+DG)":
+								value = "Platinum (+SH)";
+							break;
+							case "Platinum (+SH)":
+								value = "Platinum (+SH)";
+							break;
+							default:
+								//bruh
+								value = "Something went bruh";
+						}
+					break;
+					default:
+						//bruh
+						document.getElementById(id.slice(0, id.length-1)).innerHTML = "Something went bruh";
+				}
+				//At last, the answer
+					document.getElementById(id.slice(0, id.length-1)).innerHTML = value;
+			};
+			
+			//Define Arrs
+			var items = ["Master Sword", "Magical Sword", "Magical Shield", "Blue Ring", "The Letter", "Power Bracelet","Food", "T1", "T2", "T3 - Raft", "T4 - Ladder", "T5", "T6", "T7", "T8"];
+			var locations = ["A11","A12","A15","C2","C3","C5","D5-50","D5-250","D8","D13","E3","E6","G14","G16-100","H5"];
+			var potions = ["Red Potion", "Red Potion", "Blue Potion", "Blue Potion", "Blue Potion"];
+			var potlocations = ["A5-50", "A5-100", "C16", "G5-50", "G5-100"];
+			var rupees = ["100 Rupees", "+50 Rupees", "-50 Rupees"];
+			var ruplocations = ["A16", "B16+", "B16-"];
+			
+			//Get vars
+			var seed = get()["seed"];
+			var pot = get()["pot"];
+			var rup = get()["rup"];
+			
+			//Handle Seed
+			if(seed==""){
+				//Generate Seed
+				if(pot=="y" && rup=="y"){
+					var loc_use = ["A11","A12","A15","C2","C3","C5","D5-50","D5-250","D8","D13","E3","E6","G14","G16-100","H5","A5-50", "A5-100", "C16", "G5-50", "G5-100","A16", "B16+", "B16-"];
+					var item_use = ["Progressive Sword", "Progressive Sword", "Progressive Shield", "Progressive Ring", "A Letter", "Progressive Bracelet","Food", "T1 - Bow", "T2 - Boomerang", "T3 - Raft", "T4 - Ladder", "T5 - Recorder", "T6 - Magic Rod", "T7 - Candle", "T8 - Magic Book & Key", "2 Potions", "2 Potions", "Potion", "Potion", "Potion", "100 Rupees", "50 Rupees", "-50 Rupees"];
+				} else if(pot=="y" && rup=="n"){
+					var loc_use = ["A11","A12","A15","C2","C3","C5","D5-50","D5-250","D8","D13","E3","E6","G14","G16-100","H5","A5-50", "A5-100", "C16", "G5-50", "G5-100"];
+					var item_use = ["Progressive Sword", "Progressive Sword", "Progressive Shield", "Progressive Ring", "A Letter", "Progressive Bracelet","Food", "T1 - Bow", "T2 - Boomerang", "T3 - Raft", "T4 - Ladder", "T5 - Recorder", "T6 - Magic Rod", "T7 - Candle", "T8 - Magic Book & Key", "2 Potions", "2 Potions", "Potion", "Potion", "Potion"];
+				} else if(pot=="n" && rup=="y"){
+					var loc_use = ["A11","A12","A15","C2","C3","C5","D5-50","D5-250","D8","D13","E3","E6","G14","G16-100","H5","A16","B16+", "B16-"];
+					var item_use = ["Progressive Sword", "Progressive Sword", "Progressive Shield", "Progressive Ring", "A Letter", "Progressive Bracelet","Food", "T1 - Bow", "T2 - Boomerang", "T3 - Raft", "T4 - Ladder", "T5 - Recorder", "T6 - Magic Rod", "T7 - Candle", "T8 - Magic Book & Key", "100 Rupees", "50 Rupees", "-50 Rupees"];			
+				} else {
+					var loc_use = ["A11","A12","A15","C2","C3","C5","D5-50","D5-250","D8","D13","E3","E6","G14","G16-100","H5"];
+					var item_use = ["Progressive Sword", "Progressive Sword", "Progressive Shield", "Progressive Ring", "A Letter", "Progressive Bracelet","Food", "T1 - Bow", "T2 - Boomerang", "T3 - Raft", "T4 - Ladder", "T5 - Recorder", "T6 - Magic Rod", "T7 - Candle", "T8 - Magic Book & Key"];
+				}
+				
+				//Shuffle Items
+				item_use = shuffle(item_use);
+				item_use = logic(item_use);
+				
+				//Generate Log
+				var seed;
+				for(x=0;x<=loc_use.length-1;x++){
+					document.getElementById(loc_use[x]+"S").value = item_use[x];
+					switch(item_use[x]){
+						case "Progressive Sword":
+							seed += "000";
+						break;
+						case "Progressive Shield":
+							seed += "001";
+						break;
+						case "Progressive Ring":
+							seed += "002";
+						break;
+						case "A Letter":
+							seed += "010";
+						break;
+						case "Progressive Bracelet":
+							seed += "011";
+						break;
+						case "Food":
+							seed += "012";
+						break;
+						case "T1 - Bow":
+							seed += "020";
+						break;
+						case "T2 - Boomerang":
+							seed += "021";
+						break;
+						case "T3 - Raft":
+							seed += "022";
+						break;
+						case "T4 - Ladder":
+							seed += "100";
+						break;
+						case "T5 - Recorder":
+							seed += "101";
+						break;
+						case "T6 - Magic Rod":
+							seed += "102";
+						break;
+						case "T7 - Candle":
+							seed += "110";
+						break;
+						case "T8 - Magic Book & Key":
+							seed += "111";
+						break;
+						case "2 Potions":
+							seed += "112";
+						break;
+						case "Potion":
+							seed += "120";
+						break;
+						case "100 Rupees":
+							seed += "121";
+						break;
+						case "50 Rupees":
+							seed += "122";
+						break;
+						default:
+							//-50 Rupees
+							seed += "200";
+					}
+				}
+				document.getElementById("seed").innerHTML += seed;
+			} else {
+				var read = "";
+				var item_read = [];
+				for(s=0; s<=seed.length-3; s+=3){
+					read = seed[s] + seed[s+1] + seed[s+2];
+					switch(read){
+						case "000":
+							item_read.push("Progressive Sword");
+						break;
+						case "001":
+							item_read.push("Progressive Shield");
+						break;
+						case "002":
+							item_read.push("Progressive Ring");
+						break;
+						case "010":
+							item_read.push("A Letter");
+						break;
+						case "011":
+							item_read.push("Progressive Bracelet");
+						break;
+						case "012":
+							item_read.push("Food");
+						break;
+						case "020":
+							item_read.push("T1 - Bow & Boomerang");
+						break;
+						case "021":
+							item_read.push("T2 - Boomerang");
+						break;
+						case "022":
+							item_read.push("T3 - Raft");
+						break;
+						case "100":
+							item_read.push("T4 - Ladder");
+						break;
+						case "101":
+							item_read.push("T5 - Recorder");
+						break;
+						case "102":
+							item_read.push("T6 - Magic Rod");
+						break;
+						case "110":
+							item_read.push("T7 - Candle");
+						break;
+						case "111":
+							item_read.push("T8 - Magic Book & Key");
+						break;
+						case "112":
+							item_read.push("2 Potions");
+						break;
+						case "120":
+							item_read.push("Potion");
+						break;
+						case "121":
+							item_read.push("100 Rupees");
+						break;
+						case "122":
+							item_read.push("50 Rupees");
+						break;
+						default:
+							//-50 Rupees
+							item_read.push("-50 Rupees");
+					}
+				}
+				switch(item_read.length){
+					case 15:
+						//potN rupN
+						var loc_read = ["A11","A12","A15","C2","C3","C5","D5-50","D5-250","D8","D13","E3","E6","G14","G16-100","H5"];
+					break;
+					case 18:
+						//potN rupY
+						var loc_read = ["A11","A12","A15","C2","C3","C5","D5-50","D5-250","D8","D13","E3","E6","G14","G16-100","H5","A16","B16+", "B16-"];
+					break;
+					case 20:
+						//potY rupN
+						var loc_read = ["A11","A12","A15","C2","C3","C5","D5-50","D5-250","D8","D13","E3","E6","G14","G16-100","H5","A5-50", "A5-100", "C16", "G5-50", "G5-100"];
+					break;
+					case 23:
+						//potY rupY
+						var loc_read = ["A11","A12","A15","C2","C3","C5","D5-50","D5-250","D8","D13","E3","E6","G14","G16-100","H5","A5-50", "A5-100", "C16", "G5-50", "G5-100","A16", "B16+", "B16-"];
+					break;
+					default:
+						document.getElementById("seed").innerHTML += "Read Error = " + item_read;
+				}
+				for(x=0;x<=loc_read.length-1;x++){
+					document.getElementById(loc_read[x]+"S").value = item_read[x];
+				}
+				document.getElementById("seed").innerHTML += seed;
+			}
+		</script>
+	</body>
+</html>
